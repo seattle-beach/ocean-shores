@@ -1,20 +1,19 @@
 require 'minitest/autorun'
-require 'rack/test'
+require 'capybara'
+require 'capybara/dsl'
 
 $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
 require 'ocean_shores/app'
 include OceanShores
 
-class TestApp < Minitest::Test
-  include Rack::Test::Methods
+Capybara.app = App
 
-  def app
-    App
-  end
+class TestApp < Minitest::Test
+  include Capybara::DSL
 
   def test_app
-    get '/'
+    visit '/'
 
-    assert last_response.ok?
+    assert_equal 200, page.status_code
   end
 end
