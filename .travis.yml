@@ -1,1 +1,13 @@
 language: ruby
+before_deploy:
+- rm -rf vendor
+deploy:
+  provider: cloudfoundry
+  api: https://api.run.pivotal.io
+  username: achen@pivotal.io
+  password:
+    secure: FCuSw7YC7GYSRS9i0TMsnFHVoDup+KWEAX6Zr3NrQxTAlDfduKgDgy2TlaU7LI2WFrP6MTiESF3DRRjf24vmUVoM81b+1Qf+IGvpQMqUdkHt9ByacseR2pwHTmKSsRjy3QgQHkddcoPCyFHw0OB5mYNiYIHQJ0R2dbRuwOgNM2LuCp7BrgIFkiBMkU47cLkgfvZg27bTqTB1fo6fN/Jv1ZbnUwQAKlQTj8klrGRX2vZfgkHmkVVuWMLm4dybv0W/hxvuZffOi5oRkmFt6gVGtE2PzHzjMEF4mKttBPpnE/aMLjBCZ9NqNc0PlGWFnbB5rf3y5oAVEMXqCTq9RO2z6peCfu/N6BKa0J3sXyvG6awo3Yb3BfyW5Xr4TYFrvyk+vKi6qBAhW0UyVaEULsrSw35mvk68p0hV2idhH7K9ZgKrzTg2cs3436wCr/lZOpCi3J5krtSITiREmO7m/G2hmA+FRgXBNoJyEsm9Kd4WEbqaWfxnLgdXPbQJSx0FrHhWgxgGIKOHIav3Mo12JNm6j34chpxXjehi0XF42BXfNiEhF+wUH5OFlAHkwxakBdWqcu0H4KtXJx1T25cYFCzvTSeTOfO1VVOlc5ngGHkHcI8t17naX5FYgVRJSaEwpusZ18In/wr/F50hU8l8FwECS95qj+pXxyH0a+aOdwgf5jA=
+  organization: seattle-beach
+  space: dev
+  on:
+    repo: seattle-beach/ocean-shores
