@@ -21,7 +21,8 @@ module OceanShores
 
           player_names = players.map(&:last)
           player_names.each do |name|
-            player_id = DB[:players].insert(name: name)
+            player = DB[:players][name: name]
+            player_id = player ? player['id'] : DB[:players].insert(name: name)
             DB[:players_teams].insert(player_id: player_id, team_id: team_id)
           end
 

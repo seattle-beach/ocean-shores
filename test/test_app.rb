@@ -24,9 +24,20 @@ class TestApp < Minitest::Test
   end
 
   def test_add_match
-    assert_equal 0, DB[:matches].count
-    assert_equal 0, DB[:teams].count
-    assert_equal 0, DB[:players].count
+    visit '/'
+    fill_in 't1-p1', :with => 'Alpha Chen'
+    fill_in 't2-p1', :with => 'Augustus Lidaka'
+    click_button 'Add Match'
+
+    assert_equal 200, page.status_code
+
+    assert_equal 1, DB[:matches].count
+    assert_equal 2, DB[:teams].count
+    assert_equal 2, DB[:players].count
+  end
+
+  def test_add_existing_player
+    DB[:players].insert(name: 'Alpha Chen')
 
     visit '/'
     fill_in 't1-p1', :with => 'Alpha Chen'
@@ -41,6 +52,10 @@ class TestApp < Minitest::Test
   end
 
   def run(*args, &block)
+    assert_equal 0, DB[:matches].count
+    assert_equal 0, DB[:teams].count
+    assert_equal 0, DB[:players].count
+
     DB.transaction(rollback: :always, auto_savepoint: true) do
       super
     end
