@@ -15,4 +15,5 @@ end
 group :test do
   gem 'capybara'
   gem 'minitest'
+  gem 'sqlite3'
 end
