@@ -7,6 +7,7 @@ gem 'sequel'
 gem 'sinatra'
 
 group :development do
+  gem 'foreman'
   gem 'pry'
   gem 'rake'
   gem 'rerun'
