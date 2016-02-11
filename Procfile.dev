@@ -1,2 +1,2 @@
 postgres: postgres -D /usr/local/var/postgres
-# web: rerun --no-notify -- rackup
+web: rerun --no-notify -- rackup

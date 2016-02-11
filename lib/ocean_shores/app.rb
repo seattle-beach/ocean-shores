@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'tilt/erb'
 
 require_relative 'db'
+require_relative 'models'
 
 module OceanShores
   class App < Sinatra::Base
@@ -11,28 +12,27 @@ module OceanShores
 
     post '/matches' do
       DB.transaction do
-        team_ids = []
+        teams = []
         params
           .group_by { |k, v| k.split('-').first }
           .sort_by(&:first)
           .each do |team, players|
 
-          team_id = DB[:teams].insert
+          team = Models::Team.create
 
           player_names = players.map(&:last)
           player_names.each do |name|
-            player = DB[:players][name: name]
-            player_id = player ? player['id'] : DB[:players].insert(name: name)
-            DB[:players_teams].insert(player_id: player_id, team_id: team_id)
+            player = Models::Player.find_or_create(name: name)
+            team.add_player(player)
           end
 
-          team_ids << team_id
+          teams << team
         end
 
-        match_id = DB[:matches].insert
-        team_ids.each.with_index do |team_id, index|
+        match = Models::Match.create
+        teams.each.with_index do |team, index|
           rank = index + 1
-          DB[:matches_teams].insert(rank: rank, match_id: match_id, team_id: team_id)
+          DB[:matches_teams].insert(rank: rank, match_id: match.id, team_id: team.id)
         end
       end
 

@@ -1,3 +1,5 @@
+require 'logger'
+
 require 'minitest/autorun'
 require 'capybara'
 require 'capybara/dsl'
@@ -8,6 +10,9 @@ ENV['DATABASE_URL'] = 'sqlite::memory:'
 require 'ocean_shores/db'
 Sequel.extension :migration
 Sequel::Migrator.run(OceanShores::DB, File.expand_path('../../db/migrations', __FILE__))
+require 'ocean_shores/models'
+
+OceanShores::DB.loggers << Logger.new($STDOUT)
 
 require 'ocean_shores/app'
 include OceanShores
