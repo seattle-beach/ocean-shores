@@ -12,21 +12,16 @@ module OceanShores
 
     post '/matches' do
       DB.transaction do
-        teams = []
-        params
-          .group_by { |k, v| k.split('-').first }
-          .sort_by(&:first)
-          .each do |team, players|
+        sorted = params.group_by { |k, v| k.split('-').first }
+                       .sort_by { |t, _| t.sub(/^t/, '').to_i }
 
+        teams = sorted.map do |team, players|
           team = Models::Team.create
-
-          player_names = players.map(&:last)
-          player_names.each do |name|
+          players.map(&:last).each do |name|
             player = Models::Player.find_or_create(name: name)
             team.add_player(player)
           end
-
-          teams << team
+          team
         end
 
         match = Models::Match.create
