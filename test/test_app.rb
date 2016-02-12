@@ -1,11 +1,10 @@
 require 'logger'
 
-require 'minitest/autorun'
 require 'capybara'
 require 'capybara/dsl'
 require 'capybara-select2'
 
-$LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
+require_relative 'test_helper'
 
 ENV['DATABASE_URL'] = 'sqlite::memory:'
 require 'ocean_shores/db'
@@ -16,7 +15,6 @@ require 'ocean_shores/models'
 OceanShores::DB.loggers << Logger.new($STDOUT)
 
 require 'ocean_shores/app'
-include OceanShores
 
 Capybara.app = App
 
