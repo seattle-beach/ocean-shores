@@ -17,6 +17,7 @@ class TestLadder < Minitest::Test
 
   def test_only_two_players
     ladder = Ladder.new([123, 456])
+
     assert_equal [123, 456], ladder.add_match(winner: 123, loser: 456).players
     assert_equal [456, 123], ladder.add_match(winner: 456, loser: 123).players
   end
@@ -32,6 +33,7 @@ class TestLadder < Minitest::Test
 
   def test_adding_a_new_player
     ladder = Ladder.new([1, 2, 3, 4, 5])
+
     assert_equal [1, 2, 3, 4, 6, 5], ladder.add_match(winner: 6, loser: 5).players
     assert_equal [1, 2, 3, 6, 4, 5], ladder.add_match(winner: 6, loser: 1).players
     assert_equal [1, 2, 3, 6, 4, 5], ladder.add_match(winner: 6, loser: 2).players
@@ -39,7 +41,14 @@ class TestLadder < Minitest::Test
 
   def test_existing_players
     ladder = Ladder.new([1, 2, 3, 4, 5])
+
     assert_equal [1, 2, 5, 3, 4], ladder.add_match(winner: 5, loser: 1).players
     assert_equal [1, 2, 3, 5, 4], ladder.add_match(winner: 5, loser: 2).players
+    assert_equal [1, 2, 3, 5, 4], ladder.add_match(winner: 5, loser: 3).players
+    assert_equal [1, 2, 3, 5, 4], ladder.add_match(winner: 5, loser: 4).players
+
+    assert_equal [1, 2, 4, 3, 5], ladder.add_match(winner: 4, loser: 1).players
+    assert_equal [1, 2, 4, 3, 5], ladder.add_match(winner: 4, loser: 2).players
+    assert_equal [1, 2, 4, 3, 5], ladder.add_match(winner: 4, loser: 3).players
   end
 end
