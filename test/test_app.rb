@@ -3,6 +3,7 @@ require 'logger'
 require 'minitest/autorun'
 require 'capybara'
 require 'capybara/dsl'
+require 'capybara-select2'
 
 $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
 
@@ -21,14 +22,11 @@ Capybara.app = App
 
 class TestApp < Minitest::Test
   include Capybara::DSL
+  include Capybara::Select2
+  include Rack::Test::Methods
 
   def test_add_match
-    visit '/'
-    fill_in 't1-p1', :with => 'Alpha Chen'
-    fill_in 't2-p1', :with => 'Augustus Lidaka'
-    click_button 'Add Match'
-
-    assert_equal 200, page.status_code
+    post '/matches', 't1-p1' => 'Alpha Chen', 't2-p1' => 'Augustus Lidaka'
 
     assert_equal 1, Models::Match.count
     assert_equal 2, Models::Team.count
@@ -38,12 +36,7 @@ class TestApp < Minitest::Test
   def test_add_existing_player
     Models::Player.create(name: 'Alpha Chen')
 
-    visit '/'
-    fill_in 't1-p1', :with => 'Alpha Chen'
-    fill_in 't2-p1', :with => 'Augustus Lidaka'
-    click_button 'Add Match'
-
-    assert_equal 200, page.status_code
+    post '/matches', 't1-p1' => 'Alpha Chen', 't2-p1' => 'Augustus Lidaka'
 
     assert_equal 1, Models::Match.count
     assert_equal 2, Models::Team.count
@@ -51,8 +44,7 @@ class TestApp < Minitest::Test
   end
 
   def test_players_api
-    names = ['Alpha Chen', 'Augustus Lidaka']
-    Models::Player.import([:name], names)
+    Models::Player.import([:name], ['Alpha Chen', 'Augustus Lidaka'])
 
     visit '/player_names.json'
 
@@ -60,7 +52,11 @@ class TestApp < Minitest::Test
     assert_equal 'application/json', page.response_headers['Content-Type']
 
     player_names = JSON.load(page.body)
-    assert_equal names, player_names
+    assert_equal ['Alpha Chen', 'Augustus Lidaka'], player_names
+  end
+
+  def app
+    App
   end
 
   def run(*args, &block)

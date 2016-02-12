@@ -1,16 +1,40 @@
 <h1>Ocean Shores</h1>
 <div class="row">
   <div id="add-match" class=".col-md-12">
-    <form class="form-inline" action="/matches" method="post">
+    <form action="/matches" method="post">
       <div class="form-group">
-        <label for="t1-p1">Player 1</label>
-        <input class="form-control" name="t1-p1" type="text" value="" />
+        <label for="t1-p1">Team 1</label>
+        <select class="select-player form-control" name="t1-p1" type="text" value="" data-placeholder="Player 1">
+        </select>
       </div>
       <div class="form-group">
-        <label for="t2-p1">Player 2</label>
-        <input class="form-control" name="t2-p1" type="text" value="" />
+        <label for="t2-p1">Team 2</label>
+        <select class="select-player form-control" name="t2-p1" type="text" value="" data-placeholder="Player 2">
+        </select>
       </div>
       <button class="btn btn-default" type="submit">Add Match</button>
     </form>
   </div>
 </div>
+
+<script>
+$(document).ready(function() {
+  $(".select-player").select2({
+    theme: "bootstrap",
+    <%# placeholder: "Player 1", %>
+    ajax: {
+      url: "/player_names.json",
+      dataType: "json",
+      delay: 250,
+      processResults: function (data, params) {
+        return {
+          results: data.map(function (name) { return { id: name, text: name } }),
+          pagination: { more: false }
+        }
+      },
+      cache: true
+    },
+    tags: true
+  });
+});
+</script>
