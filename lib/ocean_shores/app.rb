@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'sinatra/json'
 require 'tilt/erb'
 
 require_relative 'db'
@@ -32,6 +33,10 @@ module OceanShores
       end
 
       redirect '/'
+    end
+
+    get '/player_names.json' do
+      json Models::Player.select_map(:name)
     end
 
     run! if app_file == $0

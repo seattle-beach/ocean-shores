@@ -36,7 +36,7 @@ class TestApp < Minitest::Test
   end
 
   def test_add_existing_player
-    DB[:players].insert(name: 'Alpha Chen')
+    Models::Player.create(name: 'Alpha Chen')
 
     visit '/'
     fill_in 't1-p1', :with => 'Alpha Chen'
@@ -48,6 +48,19 @@ class TestApp < Minitest::Test
     assert_equal 1, Models::Match.count
     assert_equal 2, Models::Team.count
     assert_equal 2, Models::Player.count
+  end
+
+  def test_players_api
+    names = ['Alpha Chen', 'Augustus Lidaka']
+    Models::Player.import([:name], names)
+
+    visit '/player_names.json'
+
+    assert_equal 200, page.status_code
+    assert_equal 'application/json', page.response_headers['Content-Type']
+
+    player_names = JSON.load(page.body)
+    assert_equal names, player_names
   end
 
   def run(*args, &block)
