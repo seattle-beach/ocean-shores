@@ -44,7 +44,7 @@ class TestApp < Minitest::Test
   end
 
   def test_players_api
-    Models::Player.import([:name], ['Alpha Chen', 'Augustus Lidaka'])
+    Models::Player.import([:name], [['Alpha Chen'], ['Augustus Lidaka']])
 
     visit '/player_names.json'
 
