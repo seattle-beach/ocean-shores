@@ -22,12 +22,6 @@ Capybara.app = App
 class TestApp < Minitest::Test
   include Capybara::DSL
 
-  def test_app
-    visit '/'
-
-    assert_equal 200, page.status_code
-  end
-
   def test_add_match
     visit '/'
     fill_in 't1-p1', :with => 'Alpha Chen'
@@ -36,9 +30,9 @@ class TestApp < Minitest::Test
 
     assert_equal 200, page.status_code
 
-    assert_equal 1, DB[:matches].count
-    assert_equal 2, DB[:teams].count
-    assert_equal 2, DB[:players].count
+    assert_equal 1, Models::Match.count
+    assert_equal 2, Models::Team.count
+    assert_equal 2, Models::Player.count
   end
 
   def test_add_existing_player
@@ -51,9 +45,9 @@ class TestApp < Minitest::Test
 
     assert_equal 200, page.status_code
 
-    assert_equal 1, DB[:matches].count
-    assert_equal 2, DB[:teams].count
-    assert_equal 2, DB[:players].count
+    assert_equal 1, Models::Match.count
+    assert_equal 2, Models::Team.count
+    assert_equal 2, Models::Player.count
   end
 
   def run(*args, &block)
