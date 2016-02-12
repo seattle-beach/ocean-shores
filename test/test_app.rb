@@ -64,9 +64,9 @@ class TestApp < Minitest::Test
   end
 
   def run(*args, &block)
-    assert_equal 0, DB[:matches].count
-    assert_equal 0, DB[:teams].count
-    assert_equal 0, DB[:players].count
+    assert_equal 0, Models::Match.count
+    assert_equal 0, Models::Team.count
+    assert_equal 0, Models::Player.count
 
     DB.transaction(rollback: :always, auto_savepoint: true) do
       super
