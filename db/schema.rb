@@ -23,14 +23,8 @@ Sequel.migration do
       primary_key :id
       column :created_at, "timestamp without time zone"
       column :updated_at, "timestamp without time zone"
-    end
-
-    create_table(:matches_teams) do
-      foreign_key :match_id, :matches, :key=>[:id]
-      foreign_key :team_id, :teams, :key=>[:id]
       column :rank, "integer", :null=>false
-
-      index [:match_id, :team_id], :unique=>true
+      foreign_key :match_id, :matches, :key=>[:id]
     end
 
     create_table(:players_teams) do

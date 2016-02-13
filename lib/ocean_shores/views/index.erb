@@ -17,23 +17,35 @@
   </div>
 </div>
 
+<div class="row">
+  <div class=".col-md-12">
+    <ol>
+      <% players.each do |player| %>
+        <li><%= player.name %></li>
+      <% end %>
+    </ol>
+  </div>
+</div>
+
 <script>
-$(document).ready(function() {
-  $(".select-player").select2({
-    theme: "bootstrap",
-    ajax: {
-      url: "/player_names.json",
-      dataType: "json",
-      delay: 250,
-      processResults: function (data, params) {
-        return {
-          results: data.map(function (name) { return { id: name, text: name } }),
-          pagination: { more: false }
-        }
+  $(document).ready(function() {
+    $(".select-player").select2({
+      theme: "bootstrap",
+      ajax: {
+        url: "/player_names.json",
+        dataType: "json",
+        delay: 250,
+        processResults: function(data, params) {
+          return {
+            results: data.map(function(name) {
+              return {id: name, text: name}
+            }),
+            pagination: {more: false}
+          }
+        },
+        cache: true
       },
-      cache: true
-    },
-    tags: true
+      tags: true
+    });
   });
-});
 </script>

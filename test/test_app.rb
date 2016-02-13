@@ -53,6 +53,15 @@ class TestApp < Minitest::Test
     assert_equal ['Alpha Chen', 'Augustus Lidaka'], player_names
   end
 
+  def test_show_ladder
+    post '/matches', 't1-p1' => 'Alpha Chen', 't2-p1' => 'Augustus Lidaka'
+
+    visit '/'
+
+    assert_equal ['Alpha Chen', 'Augustus Lidaka'],
+                 page.find_all(:xpath, '//li').map(&:text)
+  end
+
   def app
     App
   end

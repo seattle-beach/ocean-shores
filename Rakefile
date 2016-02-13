@@ -7,6 +7,16 @@ namespace :dev do
   task :start do
     sh 'rerun --no-notify -- ruby lib/ocean_shores/app.rb'
   end
+
+  desc 'Start an interactive console'
+  task :console do
+    require 'ocean_shores/db'
+    require 'ocean_shores/models'
+    include OceanShores
+
+    require 'pry'
+    binding.pry
+  end
 end
 
 namespace :db do

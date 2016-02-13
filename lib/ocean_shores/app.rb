@@ -3,32 +3,34 @@ require 'sinatra/json'
 require 'tilt/erb'
 
 require_relative 'db'
+require_relative 'ladder'
 require_relative 'models'
 
 module OceanShores
   class App < Sinatra::Base
     get '/' do
-      erb :index
+      ladder = Models::Match.all.inject(Ladder.new) do |ladder, match|
+        ladder.add_match(winner: match.teams[0].players[0].id,
+                         loser: match.teams[1].players[0].id)
+      end
+      players = Models::Player.all.sort_by { |player| ladder.players.index(player.id) }
+
+      erb :index, locals: { players: players }
     end
 
     post '/matches' do
       DB.transaction do
-        sorted = params.group_by { |k, v| k.split('-').first }
-                       .sort_by { |t, _| t.sub(/^t/, '').to_i }
+        match = Models::Match.create
 
-        teams = sorted.map do |team, players|
-          team = Models::Team.create
+        params.group_by { |k, v| k.split('-').first }
+              .sort_by { |t, _| t.sub(/^t/, '').to_i }
+              .each.with_index do |(team, players), index|
+          team = Models::Team.create(rank: index + 1)
           players.map(&:last).each do |name|
             player = Models::Player.find_or_create(name: name)
             team.add_player(player)
           end
-          team
-        end
-
-        match = Models::Match.create
-        teams.each.with_index do |team, index|
-          rank = index + 1
-          DB[:matches_teams].insert(rank: rank, match_id: match.id, team_id: team.id)
+          match.add_team(team)
         end
       end
 
