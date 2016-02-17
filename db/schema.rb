@@ -23,7 +23,7 @@ Sequel.migration do
       primary_key :id
       column :created_at, "timestamp without time zone"
       column :updated_at, "timestamp without time zone"
-      column :rank, "integer", :null=>false
+      column :rank, "integer", :default=>0, :null=>false
       foreign_key :match_id, :matches, :key=>[:id]
     end
 

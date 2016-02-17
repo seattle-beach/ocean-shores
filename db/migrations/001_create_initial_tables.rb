@@ -23,18 +23,7 @@ Sequel.migration do
       DateTime :updated_at
     end
 
-    create_table(:matches_teams) do
-      foreign_key :match_id, :matches
-      foreign_key :team_id, :teams
-      index [:match_id, :team_id], unique: true
-
-      Integer :rank, null: false
-    end
-
-    create_table(:players_teams) do
-      foreign_key :player_id, :players
-      foreign_key :team_id, :teams
-      index [:player_id, :team_id], unique: true
-    end
+    create_join_table(match_id: :matches, team_id: teams)
+    create_join_table(player_id: :players, team_id: teams)
   end
 end
