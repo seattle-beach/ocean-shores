@@ -23,7 +23,7 @@ Sequel.migration do
       DateTime :updated_at
     end
 
-    create_join_table(match_id: :matches, team_id: teams)
-    create_join_table(player_id: :players, team_id: teams)
+    create_join_table(match_id: :matches, team_id: :teams)
+    create_join_table(player_id: :players, team_id: :teams)
   end
 end
